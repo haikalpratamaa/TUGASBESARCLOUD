@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% set page_title = "Riwayat Izin" %}
+
+{% block content %}
+  <div class="section-header">
+    <div>
+      <span class="section-header__label">Pengajuan Saya</span>
+      <h2>Riwayat Izin</h2>
+    </div>
+    <a class="button button--primary" href="{{ url_for('leave_requests.mahasiswa_create') }}">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+      Ajukan Izin
+    </a>
+  </div>
+
+  {# Filter status #}
+  <div style="display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap;">
+    <a class="button {{ 'button--primary' if not status_filter else 'button--secondary' }} button--small" href="{{ url_for('leave_requests.mahasiswa_index') }}">Semua</a>
+    <a class="button {{ 'button--primary' if status_filter == 'diajukan' else 'button--secondary' }} button--small" href="{{ url_for('leave_requests.mahasiswa_index', status='diajukan') }}">Diajukan</a>
+    <a class="button {{ 'button--primary' if status_filter == 'disetujui' else 'button--secondary' }} button--small" href="{{ url_for('leave_requests.mahasiswa_index', status='disetujui') }}">Disetujui</a>
+    <a class="button {{ 'button--primary' if status_filter == 'ditolak' else 'button--secondary' }} button--small" href="{{ url_for('leave_requests.mahasiswa_index', status='ditolak') }}">Ditolak</a>
+    <a class="button {{ 'button--primary' if status_filter == 'dibatalkan' else 'button--secondary' }} button--small" href="{{ url_for('leave_requests.mahasiswa_index', status='dibatalkan') }}">Dibatalkan</a>
+  </div>
+
+  {% if izin_list %}
+    <section class="table-shell">
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>No. Izin</th>
+              <th>Mata Kuliah</th>
+              <th>Kategori</th>
+              <th>Tanggal</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for izin in izin_list %}
+              <tr>
+                <td>
+                  <strong>{{ izin.request_number }}</strong>
+                  <span class="cell-sub">{{ izin.created_at.strftime('%d/%m/%Y') }}</span>
+                </td>
+                <td>
+                  <strong>{{ izin.schedule.course_name }}</strong>
+                  <span class="cell-sub">{{ izin.schedule.class_name }}</span>
+                </td>
+                <td>{{ izin.category.name }}</td>
+                <td>{{ izin.permission_date.strftime('%d/%m/%Y') }}</td>
+                <td>
+                  <span class="status-badge status-badge--{{ izin.css_status() }}">{{ izin.label_status() }}</span>
+                </td>
+                <td>
+                  <div class="inline-actions">
+                    <a class="button button--secondary button--small" href="{{ url_for('leave_requests.mahasiswa_detail', leave_id=izin.id) }}">Detail</a>
+                    {% if izin.bisa_dicetak() %}
+                      <a class="button button--success button--small" href="{{ url_for('leave_requests.mahasiswa_print', leave_id=izin.id) }}">Cetak</a>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  {% else %}
+    <section class="empty-state">
+      <div class="empty-state__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+      </div>
+      <h2>Belum ada pengajuan izin</h2>
+      <p>Buat pengajuan pertama Anda dengan menekan tombol "Ajukan Izin".</p>
+    </section>
+  {% endif %}
+{% endblock %}

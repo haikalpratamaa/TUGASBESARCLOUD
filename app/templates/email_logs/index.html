@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% set page_title = "Email Log" %}
+
+{% block content %}
+  <section class="section-header">
+    <div>
+      <span class="section-header__label">Monitoring</span>
+      <h2>Riwayat Pengiriman Email</h2>
+    </div>
+    <div class="inline-actions">
+      <a class="button button--small {{ 'button--primary' if not status_filter else 'button--secondary' }}" href="{{ url_for('email_logs.index') }}">Semua</a>
+      <a class="button button--small {{ 'button--primary' if status_filter == 'sent' else 'button--secondary' }}" href="{{ url_for('email_logs.index', status='sent') }}">Terkirim</a>
+      <a class="button button--small {{ 'button--primary' if status_filter == 'failed' else 'button--secondary' }}" href="{{ url_for('email_logs.index', status='failed') }}">Gagal</a>
+      <a class="button button--small {{ 'button--primary' if status_filter == 'pending' else 'button--secondary' }}" href="{{ url_for('email_logs.index', status='pending') }}">Pending</a>
+    </div>
+  </section>
+
+  {% if logs %}
+    <section class="table-shell">
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Waktu</th>
+              <th>Penerima</th>
+              <th>Subject</th>
+              <th>Template</th>
+              <th>Status</th>
+              <th>Error</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in logs %}
+              <tr>
+                <td>{{ log.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ log.recipient_email }}</td>
+                <td><strong>{{ log.subject }}</strong></td>
+                <td>{{ log.template_name }}</td>
+                <td>
+                  {% if log.status == 'sent' %}
+                    <span class="status-badge status-badge--success">Terkirim</span>
+                  {% elif log.status == 'failed' %}
+                    <span class="status-badge status-badge--danger">Gagal</span>
+                  {% else %}
+                    <span class="status-badge status-badge--warning">Pending</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if log.error_message %}
+                    <span style="color: var(--red); font-size: 12px;">{{ log.error_message[:80] }}{% if log.error_message|length > 80 %}…{% endif %}</span>
+                  {% else %}
+                    <span style="color: var(--text-secondary);">—</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  {% else %}
+    <section class="empty-state">
+      <div class="empty-state__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+      </div>
+      <h2>Belum ada log email</h2>
+      <p>Log pengiriman email akan muncul di sini setelah sistem mengirim notifikasi.</p>
+    </section>
+  {% endif %}
+{% endblock %}

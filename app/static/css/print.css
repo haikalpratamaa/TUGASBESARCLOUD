@@ -1,0 +1,36 @@
+@page {
+  size: A4;
+  margin: 16mm;
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #111827;
+  }
+
+  .sidebar,
+  .topbar,
+  .flash-stack,
+  .modal-backdrop,
+  .no-print {
+    display: none !important;
+  }
+
+  .app-shell,
+  .app-content {
+    display: block;
+    min-height: auto;
+  }
+
+  .main-content {
+    padding: 0;
+  }
+
+  .print-page {
+    box-shadow: none;
+    border: 0;
+    min-height: 260mm;
+    width: 100%;
+  }
+}

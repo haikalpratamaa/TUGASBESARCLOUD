@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+
+{% set page_title = "Detail Pengajuan" %}
+
+{% block content %}
+  <div class="section-header">
+    <div>
+      <span class="section-header__label">{{ izin.request_number }}</span>
+      <h2>Detail Pengajuan Izin</h2>
+    </div>
+    <span class="status-badge status-badge--{{ izin.css_status() }}">{{ izin.label_status() }}</span>
+  </div>
+
+  <section class="detail-card" style="margin-bottom: 16px;">
+    <div class="detail-grid">
+      <div class="detail-item">
+        <span class="detail-item__label">Mahasiswa</span>
+        <span class="detail-item__value">{{ izin.student.name }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__label">NIM</span>
+        <span class="detail-item__value">{{ izin.student.student_number or '-' }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__label">Mata Kuliah</span>
+        <span class="detail-item__value">{{ izin.schedule.course_name }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__label">Kelas</span>
+        <span class="detail-item__value">{{ izin.schedule.class_name }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__label">Kategori Izin</span>
+        <span class="detail-item__value">{{ izin.category.name }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__label">Tanggal Izin</span>
+        <span class="detail-item__value">{{ izin.permission_date.strftime('%d %B %Y') }}</span>
+      </div>
+      <div class="detail-item detail-item--full">
+        <span class="detail-item__label">Alasan</span>
+        <span class="detail-item__value">{{ izin.reason }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__label">Tanggal Pengajuan</span>
+        <span class="detail-item__value">{{ izin.created_at.strftime('%d/%m/%Y %H:%M') }}</span>
+      </div>
+    </div>
+  </section>
+
+  {% if izin.bisa_diproses() %}
+    <section class="detail-card">
+      <div class="section-header section-header--compact">
+        <span class="section-header__label">Keputusan</span>
+        <h2>Proses Pengajuan Ini</h2>
+      </div>
+
+      <div class="form-group">
+        <label for="admin_note">Catatan (opsional)</label>
+        <textarea id="admin_note" form="form-approve" name="admin_note" rows="3" placeholder="Tambahkan catatan untuk mahasiswa jika perlu"></textarea>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <form id="form-approve" method="post" action="{{ url_for('leave_requests.dosen_approve', leave_id=izin.id) }}" style="flex: 1;">
+          <button class="button button--success button--full" type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            Setujui
+          </button>
+        </form>
+        <form method="post" action="{{ url_for('leave_requests.dosen_reject', leave_id=izin.id) }}" data-confirm="Yakin ingin menolak pengajuan ini?" style="flex: 1;">
+          <input type="hidden" name="admin_note" value="">
+          <button class="button button--danger button--full" type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            Tolak
+          </button>
+        </form>
+      </div>
+    </section>
+  {% elif izin.admin_note %}
+    <section class="detail-card" style="margin-bottom: 16px;">
+      <div class="section-header section-header--compact">
+        <span class="section-header__label">Catatan Anda</span>
+        <h2>{{ izin.reviewed_at.strftime('%d/%m/%Y %H:%M') if izin.reviewed_at else '' }}</h2>
+      </div>
+      <p>{{ izin.admin_note }}</p>
+    </section>
+  {% endif %}
+
+  <div style="margin-top: 16px;">
+    <a class="button button--ghost" href="{{ url_for('leave_requests.dosen_index') }}">&larr; Kembali ke Daftar</a>
+  </div>
+
+  <script>
+    // Sync admin_note textarea to reject form
+    (function() {
+      var ta = document.getElementById('admin_note');
+      var rejectForm = document.querySelector('form[action*="/reject"]');
+      if (ta && rejectForm) {
+        rejectForm.addEventListener('submit', function() {
+          var hidden = rejectForm.querySelector('input[name="admin_note"]');
+          if (hidden) hidden.value = ta.value;
+        });
+      }
+    })();
+  </script>
+{% endblock %}

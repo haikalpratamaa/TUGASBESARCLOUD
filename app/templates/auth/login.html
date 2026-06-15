@@ -1,0 +1,71 @@
+{% set hide_shell = true %}
+{% extends "layout.html" %}
+
+{% block shell_content %}
+  <div class="auth-shell">
+    <div class="auth-panel__intro">
+      <div class="auth-intro__content">
+        <span class="status-badge status-badge--light">KelasKita v1.0</span>
+        <h2>Izin kelas tercatat, diproses, dan mudah diverifikasi.</h2>
+        <p>Kelola pengajuan izin tidak masuk kelas dengan alur yang tertib. Mahasiswa mengajukan, dosen memproses, dan surat izin siap dicetak dengan QR verification.</p>
+      </div>
+    </div>
+
+    <div class="auth-panel__form">
+      <form class="auth-form" method="post" action="{{ url_for('auth.proses_login', next=request.args.get('next')) }}" data-loading>
+
+        <div style="text-align: center; margin-bottom: 24px;">
+          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="KelasKita Logo" style="width: 64px; height: 64px; border-radius: 12px; object-fit: contain; background: #fff; padding: 4px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        </div>
+        <h1 class="auth-form__title">Masuk ke KelasKita</h1>
+        <p class="auth-form__subtitle">Gunakan email atau NIM untuk login</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert--{{ category }}" data-auto-dismiss style="margin-bottom: 16px;">
+                <span>{{ message }}</span>
+                <button class="alert__close" type="button" data-dismiss-alert aria-label="Tutup">&times;</button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <div class="form-group">
+          <label for="identifier">Email atau NIM</label>
+          <input
+            id="identifier"
+            name="identifier"
+            type="text"
+            value="{{ identifier or '' }}"
+            placeholder="contoh@email.com atau 20260001"
+            autocomplete="username"
+            required
+            autofocus
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Masukkan password"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <label class="checkbox-row">
+          <input name="remember" type="checkbox">
+          <span>Ingat sesi login</span>
+        </label>
+
+        <button class="button button--primary button--full" type="submit" data-loading="Memproses...">Masuk</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

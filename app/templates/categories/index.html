@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% set page_title = "Kategori Izin" %}
+
+{% block content %}
+  <section class="page-grid page-grid--form-first">
+    <form class="form-panel" method="post" action="{{ url_for('categories.create') }}" data-loading>
+      <div class="section-header section-header--compact">
+        <span class="section-header__label">Tambah Kategori</span>
+        <h2>Jenis izin</h2>
+      </div>
+      <div class="form-group">
+        <label for="name">Nama kategori</label>
+        <input id="name" name="name" type="text" placeholder="Contoh: Sakit" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Deskripsi</label>
+        <textarea id="description" name="description" rows="3" placeholder="Keterangan kategori (opsional)"></textarea>
+      </div>
+      <button class="button button--primary button--full" type="submit">Simpan Kategori</button>
+    </form>
+
+    <section class="table-shell">
+      <div class="section-header">
+        <div>
+          <span class="section-header__label">Daftar Kategori</span>
+          <h2>Kategori yang tersedia</h2>
+        </div>
+      </div>
+
+      {% if categories %}
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Kategori</th>
+                <th>Deskripsi</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for category in categories %}
+                <tr>
+                  <td><strong>{{ category.name }}</strong></td>
+                  <td>{{ category.description or "-" }}</td>
+                  <td>
+                    <span class="status-badge {{ 'status-badge--success' if category.is_active else 'status-badge--danger' }}">
+                      {{ "Aktif" if category.is_active else "Nonaktif" }}
+                    </span>
+                  </td>
+                  <td>
+                    <form method="post" action="{{ url_for('categories.toggle_active', category_id=category.id) }}" data-confirm="Ubah status kategori ini?">
+                      <button class="button button--secondary button--small" type="submit">
+                        {{ "Nonaktifkan" if category.is_active else "Aktifkan" }}
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                <tr class="edit-row">
+                  <td colspan="4">
+                    <details>
+                      <summary>Ubah kategori {{ category.name }}</summary>
+                      <form class="compact-form compact-form--wide" method="post" action="{{ url_for('categories.update', category_id=category.id) }}">
+                        <input name="name" type="text" value="{{ category.name }}" required>
+                        <input name="description" type="text" value="{{ category.description or '' }}" placeholder="Deskripsi">
+                        <button class="button button--primary button--small" type="submit">Simpan</button>
+                      </form>
+                    </details>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state empty-state--inline">
+          <div class="empty-state__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z"/></svg>
+          </div>
+          <h2>Belum ada kategori</h2>
+          <p>Tambahkan kategori seperti sakit, kegiatan kampus, atau urusan keluarga.</p>
+        </div>
+      {% endif %}
+    </section>
+  </section>
+{% endblock %}

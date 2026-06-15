@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% set page_title = "Pengajuan Masuk" %}
+
+{% block content %}
+  <div class="section-header">
+    <div>
+      <span class="section-header__label">Approval</span>
+      <h2>Pengajuan Izin dari Mahasiswa</h2>
+    </div>
+  </div>
+
+  {# Filter status #}
+  <div style="display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap;">
+    <a class="button {{ 'button--primary' if not status_filter else 'button--secondary' }} button--small" href="{{ url_for('leave_requests.dosen_index') }}">Semua</a>
+    <a class="button {{ 'button--primary' if status_filter == 'diajukan' else 'button--secondary' }} button--small" href="{{ url_for('leave_requests.dosen_index', status='diajukan') }}">Menunggu</a>
+    <a class="button {{ 'button--primary' if status_filter == 'disetujui' else 'button--secondary' }} button--small" href="{{ url_for('leave_requests.dosen_index', status='disetujui') }}">Disetujui</a>
+    <a class="button {{ 'button--primary' if status_filter == 'ditolak' else 'button--secondary' }} button--small" href="{{ url_for('leave_requests.dosen_index', status='ditolak') }}">Ditolak</a>
+  </div>
+
+  {% if izin_list %}
+    <section class="table-shell">
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>No. Izin</th>
+              <th>Mahasiswa</th>
+              <th>Mata Kuliah</th>
+              <th>Kategori</th>
+              <th>Tanggal Izin</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for izin in izin_list %}
+              <tr>
+                <td><strong>{{ izin.request_number }}</strong></td>
+                <td>
+                  <strong>{{ izin.student.name }}</strong>
+                  <span class="cell-sub">{{ izin.student.student_number or '-' }}</span>
+                </td>
+                <td>
+                  <strong>{{ izin.schedule.course_name }}</strong>
+                  <span class="cell-sub">{{ izin.schedule.class_name }}</span>
+                </td>
+                <td>{{ izin.category.name }}</td>
+                <td>{{ izin.permission_date.strftime('%d/%m/%Y') }}</td>
+                <td>
+                  <span class="status-badge status-badge--{{ izin.css_status() }}">{{ izin.label_status() }}</span>
+                </td>
+                <td>
+                  <a class="button button--{{ 'primary' if izin.bisa_diproses() else 'secondary' }} button--small" href="{{ url_for('leave_requests.dosen_detail', leave_id=izin.id) }}">
+                    {{ "Proses" if izin.bisa_diproses() else "Lihat" }}
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  {% else %}
+    <section class="empty-state">
+      <div class="empty-state__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+      </div>
+      <h2>Tidak ada pengajuan</h2>
+      <p>Belum ada pengajuan izin dari mahasiswa di kelas yang Anda ampu.</p>
+    </section>
+  {% endif %}
+{% endblock %}

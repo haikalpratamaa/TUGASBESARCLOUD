@@ -1,0 +1,359 @@
+{% set hide_shell = true %}
+{% extends "layout.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+{% endblock %}
+
+{% block shell_content %}
+  <header class="navbar glass-effect">
+    <div class="container">
+      <a href="{{ url_for('index') }}" class="navbar__brand">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="KelasKita Logo">
+        <span>KelasKita</span>
+      </a>
+      <nav class="navbar__nav" aria-label="Navigasi Utama">
+        <a href="#fitur" class="navbar__link">Fitur</a>
+        <a href="#alur" class="navbar__link">Cara Kerja</a>
+        <a href="#testimoni" class="navbar__link">Testimoni</a>
+        <a href="#faq" class="navbar__link">FAQ</a>
+      </nav>
+      <div class="navbar__actions">
+        <a href="{{ url_for('auth.login') }}" class="btn btn--ghost">Masuk</a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn--primary">Mulai Sekarang</a>
+      </div>
+    </div>
+  </header>
+
+  <main style="position: relative;">
+    <div class="ambient-glow ambient-glow--1"></div>
+    <div class="ambient-glow ambient-glow--2"></div>
+    <div class="floating-blob floating-blob--red parallax-layer parallax-layer-down" data-parallax-speed="0.15" style="top: 8%; right: 5%;"></div>
+    <div class="floating-blob floating-blob--blue parallax-layer parallax-layer-up" data-parallax-speed="-0.12" style="top: 35%; left: -10%;"></div>
+    <div class="floating-blob floating-blob--red parallax-layer parallax-layer-down" data-parallax-speed="0.1" style="top: 60%; right: -5%;"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="grid-pattern"></div>
+      <div class="ornament-cross ornament-pos-1"></div>
+      <div class="ornament-cross ornament-pos-3"></div>
+      <div class="container">
+        <div class="hero__content">
+          <h1>Digitalisasi Izin Kuliah, Wujudkan Kampus Tertib Administrasi</h1>
+          <p>Platform manajemen izin dan absensi akademik terintegrasi. Mahasiswa mengajukan secara tertib, dosen memproses secara efisien, dan keabsahan surat terverifikasi instan via QR Code.</p>
+          <div class="hero__actions">
+            <a href="{{ url_for('auth.login') }}" class="btn btn--primary">Ajukan Izin Sekarang</a>
+            <a href="#fitur" class="btn btn--secondary">Pelajari Fitur &rarr;</a>
+          </div>
+        </div>
+        <div class="hero__visual">
+          <div class="hero__mockup">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="KelasKita Interface Mockup" class="hero__mockup-img" style="max-height: 320px; object-fit: contain; padding: 20px; background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);">
+            <div class="hero__badge">
+              <div class="hero__badge-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              </div>
+              <div class="hero__badge-text">
+                <h4>Sistem Terverifikasi</h4>
+                <p>100% Bebas Pemalsuan</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero__glow"></div>
+    </section>
+
+    <!-- Stats & Trust Indicators Section -->
+    <section class="stats">
+      <div class="container">
+        <div class="stats__grid reveal-on-scroll">
+          <div>
+            <div class="stats__number" data-count-target="15000" data-count-suffix="+">0</div>
+            <div class="stats__label">Izin Kuliah Terproses</div>
+          </div>
+          <div>
+            <div class="stats__number" data-count-target="99.8" data-count-suffix="%" data-count-decimals="1">0</div>
+            <div class="stats__label">Keaslian Terverifikasi QR</div>
+          </div>
+          <div>
+            <div class="stats__number" data-count-target="45" data-count-suffix="+">0</div>
+            <div class="stats__label">Program Studi Terintegrasi</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fitur Unggulan Section -->
+    <section id="fitur" class="section-padding">
+      <div class="container">
+        <div class="text-center reveal-on-scroll">
+          <h2 class="section-title">Fitur Unggulan KelasKita</h2>
+          <p class="section-subtitle">Didesain khusus untuk menyederhanakan alur birokrasi absensi kampus dengan keamanan tingkat tinggi.</p>
+        </div>
+        <div class="features__grid">
+          <div class="feature-card reveal-on-scroll">
+            <div class="feature-card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h.01M16 20h2M6 20h2m4 0h.01M9 16H9.01M9 12H9.01M9 8H9.01M13 8H13.01M17 8H17.01M17 12H17.01" /></svg>
+            </div>
+            <div class="feature-card__content">
+              <h3>Validasi QR Code Aman</h3>
+              <p>Mencegah pemalsuan surat izin dengan menyertakan QR Code verifikasi unik. Siapa pun dapat memindai kode tersebut untuk mencocokkan integritas data langsung dari database.</p>
+            </div>
+          </div>
+          <div class="feature-card reveal-on-scroll reveal-delay-1">
+            <div class="feature-card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <div class="feature-card__content">
+              <h3>Persetujuan Instan Dosen</h3>
+              <p>Dosen dapat memantau seluruh permohonan masuk secara rapi di dashboard khusus, lengkap dengan detail alasan dan bukti lampiran untuk persetujuan cepat.</p>
+            </div>
+          </div>
+          <div class="feature-card reveal-on-scroll reveal-delay-2">
+            <div class="feature-card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+            </div>
+            <div class="feature-card__content">
+              <h3>Notifikasi & Log Email Otomatis</h3>
+              <p>Sistem secara otomatis mengirim notifikasi email resmi kepada dosen pengampu segera setelah mahasiswa mengajukan izin, lengkap dengan log riwayat pengiriman.</p>
+            </div>
+          </div>
+          <div class="feature-card reveal-on-scroll reveal-delay-3">
+            <div class="feature-card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+            </div>
+            <div class="feature-card__content">
+              <h3>Cetak Surat Resmi Instan</h3>
+              <p>Hasilkan dokumen PDF surat izin formal akademik berstandar universitas dengan KOP Surat resmi dan tipografi baku (Times New Roman) secara otomatis.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Alur Kerja Section -->
+    <section id="alur" class="section-padding how-it-works">
+      <div class="container">
+        <div class="text-center reveal-on-scroll">
+          <h2 class="section-title">Bagaimana KelasKita Bekerja?</h2>
+          <p class="section-subtitle">Proses administrasi perizinan kuliah yang berbelit-belit kini dipangkas menjadi 3 langkah sederhana.</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card reveal-on-scroll">
+            <div class="step-card__num">1</div>
+            <h3>Mahasiswa Mengajukan</h3>
+            <p>Mahasiswa login, mengisi form pengajuan izin kuliah, menentukan jadwal mata kuliah, alasan, serta mengunggah file bukti pendukung.</p>
+          </div>
+          <div class="step-card reveal-on-scroll reveal-delay-1">
+            <div class="step-card__num">2</div>
+            <h3>Dosen Menyetujui</h3>
+            <p>Dosen menerima notifikasi email, memeriksa rincian pengajuan beserta lampiran bukti, lalu memutuskan persetujuan secara instan.</p>
+          </div>
+          <div class="step-card reveal-on-scroll reveal-delay-2">
+            <div class="step-card__num">3</div>
+            <h3>Unduh & Verifikasi</h3>
+            <p>Setelah disetujui, mahasiswa dapat mengunduh surat izin resmi dengan QR Code yang siap diverifikasi keabsahannya oleh program studi.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonial Section -->
+    <section id="testimoni" class="section-padding">
+      <div class="container">
+        <div class="text-center reveal-on-scroll">
+          <h2 class="section-title">Dipercaya Oleh Civitas Akademika</h2>
+          <p class="section-subtitle">Apa kata mereka yang telah menggunakan platform KelasKita dalam proses belajar mengajar sehari-hari.</p>
+        </div>
+        <div class="testimonials__grid">
+          <div class="testimonial-card reveal-on-scroll">
+            <div class="testimonial-card__quote">
+              "Sebelum ada KelasKita, saya harus repot mengirim pesan WhatsApp ke dosen, mencetak surat manual, lalu meminta tanda tangan basah. Sekarang semua serba digital, resmi, dan hanya butuh waktu beberapa menit untuk disetujui."
+            </div>
+            <div class="testimonial-card__author">
+              <div class="testimonial-card__avatar">S</div>
+              <div class="testimonial-card__info">
+                <h4>Sulthon Haikal</h4>
+                <p>Mahasiswa Teknik Informatika</p>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card reveal-on-scroll reveal-delay-1">
+            <div class="testimonial-card__quote">
+              "KelasKita sangat membantu saya mengelola absensi kelas. Pengajuan izin tercatat rapi di sistem dan ada notifikasi email langsung. QR Code-nya memudahkan verifikasi keabsahan sehingga terhindar dari pemalsuan surat."
+            </div>
+            <div class="testimonial-card__author">
+              <div class="testimonial-card__avatar">D</div>
+              <div class="testimonial-card__info">
+                <h4>Dr. Dosen Demo</h4>
+                <p>Dosen Pengampu Fakultas Teknik</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="section-padding faq">
+      <div class="container">
+        <div class="text-center reveal-on-scroll">
+          <h2 class="section-title">Pertanyaan yang Sering Diajukan</h2>
+          <p class="section-subtitle">Temukan jawaban atas pertanyaan umum seputar penggunaan sistem perizinan digital KelasKita.</p>
+        </div>
+        <div class="faq__list">
+          <div class="faq-item reveal-on-scroll">
+            <button class="faq-item__question" type="button">
+              <span>Apakah surat izin yang diterbitkan dari KelasKita sah?</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div class="faq-item__answer">
+              <p>Ya. Setiap surat izin yang diterbitkan oleh sistem KelasKita mengikuti standar format resmi universitas (KOP Surat, Times New Roman, dsb.) dan divalidasi menggunakan tanda tangan digital berwujud QR Code unik yang terhubung langsung ke database KelasKita.</p>
+            </div>
+          </div>
+          <div class="faq-item reveal-on-scroll reveal-delay-1">
+            <button class="faq-item__question" type="button">
+              <span>Bagaimana cara melakukan verifikasi surat izin?</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div class="faq-item__answer">
+              <p>Anda hanya perlu memindai (scan) QR Code yang tercetak di bagian footer surat izin menggunakan kamera ponsel atau aplikasi pemindai. QR Code tersebut akan mengarahkan Anda ke halaman verifikasi resmi di platform KelasKita untuk mencocokkan data surat asli dengan fisik.</p>
+            </div>
+          </div>
+          <div class="faq-item reveal-on-scroll reveal-delay-2">
+            <button class="faq-item__question" type="button">
+              <span>Apakah dosen harus login untuk memproses izin?</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div class="faq-item__answer">
+              <p>Ya. Dosen harus masuk (login) ke dashboard KelasKita demi keamanan dan keabsahan hak akses. Setelah login, dosen dapat menyetujui atau menolak permohonan masuk dengan mudah dalam satu antarmuka terpusat.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Banner Bawah -->
+    <section class="cta-banner">
+      <div class="grid-pattern"></div>
+      <div class="ornament-cross ornament-pos-2"></div>
+      <div class="ornament-cross ornament-pos-4"></div>
+      <div class="container">
+        <div class="cta-banner__card reveal-on-scroll">
+          <h2>Siap Mewujudkan Tertib Administrasi Kelas?</h2>
+          <p>Mulailah mendigitalisasi proses perizinan kuliah Anda secara tertib, aman, dan transparan hari ini bersama platform KelasKita.</p>
+          <a href="{{ url_for('auth.login') }}" class="btn btn--primary">Mulai Sekarang</a>
+          <div class="cta-banner__glow"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__info">
+          <h3>KelasKita</h3>
+          <p>Sistem manajemen izin tidak masuk kuliah yang modern, aman, dan terverifikasi secara digital untuk lingkungan perguruan tinggi di Indonesia.</p>
+        </div>
+        <div class="footer__links">
+          <h4>Navigasi</h4>
+          <ul>
+            <li><a href="#fitur">Fitur</a></li>
+            <li><a href="#alur">Cara Kerja</a></li>
+            <li><a href="#testimoni">Testimoni</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer__links">
+          <h4>Akses</h4>
+          <ul>
+            <li><a href="{{ url_for('auth.login') }}">Masuk Akun</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Buat Akun Baru</a></li>
+            <li><a href="mailto:support@kelaskita.local">Hubungi Dukungan</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <div>&copy; 2026 KelasKita. Hak Cipta Dilindungi.</div>
+        <div>Dibuat oleh Haikal Pratama (1202230038), untuk memenuhi tugas besar mata kuliah Komputasi Awan.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.faq-item__question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement, active = item.classList.contains('is-active');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('is-active'));
+        if (!active) item.classList.add('is-active');
+      });
+    });
+
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('.navbar');
+      if (window.scrollY > 20) {
+        nav.classList.add('navbar--scrolled');
+        nav.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.05)';
+        nav.style.background = 'rgba(255, 255, 255, 0.85)';
+      } else {
+        nav.classList.remove('navbar--scrolled');
+        nav.style.boxShadow = 'none';
+        nav.style.background = 'rgba(255, 255, 255, 0.7)';
+      }
+    });
+
+    if (!CSS.supports('animation-timeline', 'scroll()')) {
+      const layers = document.querySelectorAll('.parallax-layer');
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        layers.forEach(el => {
+          const sp = parseFloat(el.getAttribute('data-parallax-speed')) || 0.1;
+          el.style.transform = `translate3d(0, ${y * sp}px, 0)`;
+        });
+      });
+    }
+
+    const hero = document.querySelector('.hero'), mockup = document.querySelector('.hero__mockup');
+    if (hero && mockup) {
+      hero.addEventListener('mousemove', (e) => {
+        const rect = hero.getBoundingClientRect();
+        const x = e.clientX - rect.left - (rect.width / 2), y = e.clientY - rect.top - (rect.height / 2);
+        const rx = -(y / (rect.height / 2)) * 8, ry = (x / (rect.width / 2)) * 8;
+        mockup.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.02, 1.02, 1.02)`;
+      });
+      hero.addEventListener('mouseleave', () => {
+        mockup.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+      });
+    }
+
+    function runCounter(el) {
+      const tgt = parseFloat(el.dataset.countTarget), sfx = el.dataset.countSuffix || '', dec = parseInt(el.dataset.countDecimals) || 0;
+      const dur = 2000, start = performance.now();
+      const formatNum = v => {
+        let s = v.toFixed(dec);
+        if (dec === 0) return parseInt(s).toLocaleString('en-US');
+        let p = s.split('.');
+        return parseInt(p[0]).toLocaleString('en-US') + '.' + p[1];
+      };
+      function upd(t) {
+        const progress = Math.min((t - start) / dur, 1), val = progress * (2 - progress) * tgt;
+        el.textContent = formatNum(val) + sfx;
+        if (progress < 1) requestAnimationFrame(upd);
+      }
+      requestAnimationFrame(upd);
+    }
+
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          e.target.querySelectorAll('[data-count-target]').forEach(runCounter);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => obs.observe(el));
+  </script>
+{% endblock %}

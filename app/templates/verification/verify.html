@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }} — KelasKita</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        background: #F9FAFB;
+        color: #1F2937;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .verify-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        max-width: 480px;
+        width: 100%;
+        padding: 32px;
+        text-align: center;
+      }
+      .verify-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+      .verify-icon--valid {
+        background: #ECFDF3;
+        color: #2E7D32;
+      }
+      .verify-icon--invalid {
+        background: #FDECEC;
+        color: #DC2626;
+      }
+      .verify-icon svg { width: 28px; height: 28px; }
+      h1 {
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 6px;
+        letter-spacing: -0.01em;
+      }
+      .verify-subtitle {
+        color: #6B7280;
+        font-size: 13px;
+        margin-bottom: 24px;
+      }
+      .verify-data {
+        text-align: left;
+        border-top: 1px solid #E5E7EB;
+        padding-top: 16px;
+        margin-top: 8px;
+      }
+      .verify-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #F3F4F6;
+      }
+      .verify-row:last-child { border-bottom: 0; }
+      .verify-label {
+        color: #6B7280;
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .verify-value {
+        font-size: 13px;
+        font-weight: 600;
+        text-align: right;
+      }
+      .status-badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 6px;
+      }
+      .status-badge--success { background: #ECFDF3; color: #2E7D32; }
+      .status-badge--warning { background: #FFFBEB; color: #92400E; }
+      .status-badge--danger  { background: #FDECEC; color: #DC2626; }
+      .status-badge--muted   { background: #F3F4F6; color: #6B7280; }
+      .brand {
+        display: inline-block;
+        background: #C62828;
+        color: #fff;
+        font-weight: 800;
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        letter-spacing: 0.05em;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="verify-card">
+      {% if valid %}
+        <div class="verify-icon verify-icon--valid">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+        </div>
+        <h1>Surat Izin Terverifikasi</h1>
+        <p class="verify-subtitle">Surat izin ini tercatat dan valid di sistem KelasKita.</p>
+
+        <div class="verify-data">
+          <div class="verify-row">
+            <span class="verify-label">No. Izin</span>
+            <span class="verify-value">{{ izin.request_number }}</span>
+          </div>
+          <div class="verify-row">
+            <span class="verify-label">Mahasiswa</span>
+            <span class="verify-value">{{ izin.student.name }}</span>
+          </div>
+          <div class="verify-row">
+            <span class="verify-label">NIM</span>
+            <span class="verify-value">{{ izin.student.student_number or '-' }}</span>
+          </div>
+          <div class="verify-row">
+            <span class="verify-label">Mata Kuliah</span>
+            <span class="verify-value">{{ izin.schedule.course_name }}</span>
+          </div>
+          <div class="verify-row">
+            <span class="verify-label">Tanggal Izin</span>
+            <span class="verify-value">{{ izin.permission_date.strftime('%d/%m/%Y') }}</span>
+          </div>
+          <div class="verify-row">
+            <span class="verify-label">Status</span>
+            <span class="verify-value">
+              <span class="status-badge status-badge--{{ izin.css_status() }}">{{ izin.label_status() }}</span>
+            </span>
+          </div>
+          {% if izin.reviewer %}
+          <div class="verify-row">
+            <span class="verify-label">Disetujui oleh</span>
+            <span class="verify-value">{{ izin.reviewer.name }}</span>
+          </div>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="verify-icon verify-icon--invalid">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+        </div>
+        <h1>Surat Tidak Ditemukan</h1>
+        <p class="verify-subtitle">Token verifikasi tidak valid atau surat izin tidak tercatat di sistem KelasKita.</p>
+      {% endif %}
+      <span class="brand">KELASKITA</span>
+    </div>
+  </body>
+</html>

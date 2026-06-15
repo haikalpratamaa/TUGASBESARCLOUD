@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+
+{% set page_title = "Manajemen User" %}
+
+{% block content %}
+  <section class="page-grid page-grid--form-first">
+    <form class="form-panel" method="post" action="{{ url_for('users.create') }}" data-loading>
+      <div class="section-header section-header--compact">
+        <span class="section-header__label">Tambah User</span>
+        <h2>Akun baru</h2>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="name">Nama</label>
+          <input id="name" name="name" type="text" placeholder="Nama lengkap" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="contoh@email.com" required>
+        </div>
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select id="role" name="role" required>
+            {% for role in roles %}
+              <option value="{{ role }}">{{ role|capitalize }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="password">Password awal</label>
+          <input id="password" name="password" type="password" minlength="6" placeholder="Min. 6 karakter" required>
+        </div>
+        <div class="form-group">
+          <label for="student_number">NIM</label>
+          <input id="student_number" name="student_number" type="text" placeholder="Wajib untuk mahasiswa">
+        </div>
+        <div class="form-group">
+          <label for="lecturer_code">Kode dosen</label>
+          <input id="lecturer_code" name="lecturer_code" type="text" placeholder="Opsional">
+        </div>
+        <div class="form-group form-grid__full">
+          <label for="phone">Nomor HP</label>
+          <input id="phone" name="phone" type="text" placeholder="Opsional">
+        </div>
+      </div>
+
+      <button class="button button--primary button--full" type="submit">Simpan User</button>
+    </form>
+
+    <section class="table-shell">
+      <div class="section-header">
+        <div>
+          <span class="section-header__label">Daftar User</span>
+          <h2>Akun sistem</h2>
+        </div>
+      </div>
+
+      {% if users %}
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+                <tr>
+                  <td>
+                    <strong>{{ user.name }}</strong>
+                    <span class="cell-sub">{{ user.student_number or user.lecturer_code or "-" }}</span>
+                  </td>
+                  <td><span class="status-badge status-badge--info">{{ user.role|capitalize }}</span></td>
+                  <td>{{ user.email }}</td>
+                  <td>
+                    <span class="status-badge {{ 'status-badge--success' if user.is_active else 'status-badge--danger' }}">
+                      {{ "Aktif" if user.is_active else "Nonaktif" }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="inline-actions">
+                      <form method="post" action="{{ url_for('users.toggle_active', user_id=user.id) }}" data-confirm="Ubah status user ini?">
+                        <button class="button button--secondary button--small" type="submit">
+                          {{ "Nonaktifkan" if user.is_active else "Aktifkan" }}
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="edit-row">
+                  <td colspan="5">
+                    <details>
+                      <summary>Ubah data {{ user.name }}</summary>
+                      <form class="compact-form" method="post" action="{{ url_for('users.update', user_id=user.id) }}">
+                        <input name="name" type="text" value="{{ user.name }}" required>
+                        <input name="email" type="email" value="{{ user.email }}" required>
+                        <select name="role" required>
+                          {% for role in roles %}
+                            <option value="{{ role }}" {{ "selected" if user.role == role }}>{{ role|capitalize }}</option>
+                          {% endfor %}
+                        </select>
+                        <input name="student_number" type="text" value="{{ user.student_number or '' }}" placeholder="NIM">
+                        <input name="lecturer_code" type="text" value="{{ user.lecturer_code or '' }}" placeholder="Kode dosen">
+                        <input name="phone" type="text" value="{{ user.phone or '' }}" placeholder="Nomor HP">
+                        <input name="password" type="password" placeholder="Password baru (opsional)">
+                        <button class="button button--primary button--small" type="submit">Simpan</button>
+                      </form>
+                    </details>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state empty-state--inline">
+          <div class="empty-state__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"/></svg>
+          </div>
+          <h2>Belum ada user</h2>
+          <p>Tambahkan admin, dosen, atau mahasiswa untuk mulai memakai sistem.</p>
+        </div>
+      {% endif %}
+    </section>
+  </section>
+{% endblock %}

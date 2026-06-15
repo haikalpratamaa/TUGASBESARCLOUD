@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+
+{% set page_title = "Jadwal Kelas" %}
+
+{% block content %}
+  <section class="page-grid page-grid--form-first">
+    <form class="form-panel" method="post" action="{{ url_for('schedules.create') }}" data-loading>
+      <div class="section-header section-header--compact">
+        <span class="section-header__label">Tambah Jadwal</span>
+        <h2>Mata kuliah baru</h2>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group form-grid__full">
+          <label for="course_name">Mata kuliah</label>
+          <input id="course_name" name="course_name" type="text" placeholder="Contoh: Pemrograman Web" required>
+        </div>
+        <div class="form-group">
+          <label for="class_name">Kelas</label>
+          <input id="class_name" name="class_name" type="text" placeholder="Contoh: IT-06-02" required>
+        </div>
+        <div class="form-group">
+          <label for="lecturer_id">Dosen</label>
+          <select id="lecturer_id" name="lecturer_id" required>
+            <option value="">Pilih dosen</option>
+            {% for lecturer in lecturers %}
+              <option value="{{ lecturer.id }}">{{ lecturer.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="day">Hari</label>
+          <select id="day" name="day" required>
+            {% for day in days %}
+              <option value="{{ day }}">{{ day }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="room">Ruangan</label>
+          <input id="room" name="room" type="text" placeholder="Contoh: Lab 301">
+        </div>
+        <div class="form-group">
+          <label for="start_time">Jam mulai</label>
+          <input id="start_time" name="start_time" type="time" required>
+        </div>
+        <div class="form-group">
+          <label for="end_time">Jam selesai</label>
+          <input id="end_time" name="end_time" type="time" required>
+        </div>
+      </div>
+
+      <button class="button button--primary button--full" type="submit">Simpan Jadwal</button>
+    </form>
+
+    <section class="table-shell">
+      <div class="section-header">
+        <div>
+          <span class="section-header__label">Daftar Jadwal</span>
+          <h2>Kelas aktif dan arsip</h2>
+        </div>
+      </div>
+
+      {% if schedules %}
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Mata Kuliah</th>
+                <th>Kelas</th>
+                <th>Dosen</th>
+                <th>Waktu</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for schedule in schedules %}
+                <tr>
+                  <td><strong>{{ schedule.course_name }}</strong></td>
+                  <td>{{ schedule.class_name }}</td>
+                  <td>{{ schedule.lecturer.name }}</td>
+                  <td>
+                    <strong>{{ schedule.day }}</strong>
+                    <span class="cell-sub">{{ schedule.start_time.strftime("%H:%M") }}–{{ schedule.end_time.strftime("%H:%M") }}{% if schedule.room %} · {{ schedule.room }}{% endif %}</span>
+                  </td>
+                  <td>
+                    <span class="status-badge {{ 'status-badge--success' if schedule.is_active else 'status-badge--danger' }}">
+                      {{ "Aktif" if schedule.is_active else "Nonaktif" }}
+                    </span>
+                  </td>
+                  <td>
+                    <form method="post" action="{{ url_for('schedules.toggle_active', schedule_id=schedule.id) }}" data-confirm="Ubah status jadwal ini?">
+                      <button class="button button--secondary button--small" type="submit">
+                        {{ "Nonaktifkan" if schedule.is_active else "Aktifkan" }}
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                <tr class="edit-row">
+                  <td colspan="6">
+                    <details>
+                      <summary>Ubah jadwal {{ schedule.course_name }} — {{ schedule.class_name }}</summary>
+                      <form class="compact-form" method="post" action="{{ url_for('schedules.update', schedule_id=schedule.id) }}">
+                        <input name="course_name" type="text" value="{{ schedule.course_name }}" required>
+                        <input name="class_name" type="text" value="{{ schedule.class_name }}" required>
+                        <select name="lecturer_id" required>
+                          {% for lecturer in lecturers %}
+                            <option value="{{ lecturer.id }}" {{ "selected" if schedule.lecturer_id == lecturer.id }}>{{ lecturer.name }}</option>
+                          {% endfor %}
+                        </select>
+                        <select name="day" required>
+                          {% for day in days %}
+                            <option value="{{ day }}" {{ "selected" if schedule.day == day }}>{{ day }}</option>
+                          {% endfor %}
+                        </select>
+                        <input name="room" type="text" value="{{ schedule.room or '' }}" placeholder="Ruangan">
+                        <input name="start_time" type="time" value="{{ schedule.start_time.strftime('%H:%M') }}" required>
+                        <input name="end_time" type="time" value="{{ schedule.end_time.strftime('%H:%M') }}" required>
+                        <button class="button button--primary button--small" type="submit">Simpan</button>
+                      </form>
+                    </details>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state empty-state--inline">
+          <div class="empty-state__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+          </div>
+          <h2>Belum ada jadwal</h2>
+          <p>Tambahkan jadwal agar mahasiswa dapat memilih kelas saat mengajukan izin.</p>
+        </div>
+      {% endif %}
+    </section>
+  </section>
+{% endblock %}

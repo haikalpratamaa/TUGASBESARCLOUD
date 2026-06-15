@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% set page_title = "Ajukan Izin" %}
+
+{% block content %}
+  <section style="max-width: 640px;">
+    <div class="section-header section-header--compact">
+      <span class="section-header__label">Pengajuan Baru</span>
+      <h2>Form Izin Tidak Masuk Kelas</h2>
+      <p>Lengkapi data berikut untuk mengajukan izin.</p>
+    </div>
+
+    <form class="form-panel" method="post" action="{{ url_for('leave_requests.mahasiswa_store') }}" data-loading>
+      <div class="form-group">
+        <label for="schedule_id">Jadwal Kelas</label>
+        {% if schedules %}
+          <select id="schedule_id" name="schedule_id" required>
+            <option value="">Pilih jadwal kelas</option>
+            {% for s in schedules %}
+              <option value="{{ s.id }}">{{ s.course_name }} — {{ s.class_name }} ({{ s.day }}, {{ s.start_time.strftime('%H:%M') }}–{{ s.end_time.strftime('%H:%M') }})</option>
+            {% endfor %}
+          </select>
+        {% else %}
+          <p class="form-hint" style="color: var(--red);">Jadwal kelas belum tersedia. Hubungi admin.</p>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="category_id">Kategori Izin</label>
+        {% if categories %}
+          <select id="category_id" name="category_id" required>
+            <option value="">Pilih kategori</option>
+            {% for c in categories %}
+              <option value="{{ c.id }}">{{ c.name }}</option>
+            {% endfor %}
+          </select>
+        {% else %}
+          <p class="form-hint" style="color: var(--red);">Kategori izin belum tersedia. Hubungi admin.</p>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="permission_date">Tanggal Izin</label>
+        <input id="permission_date" name="permission_date" type="date" required>
+      </div>
+
+      <div class="form-group">
+        <label for="reason">Alasan Izin</label>
+        <textarea id="reason" name="reason" rows="4" minlength="10" placeholder="Jelaskan alasan izin Anda (minimal 10 karakter)" required></textarea>
+        <span class="form-hint">Minimal 10 karakter</span>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <a class="button button--secondary" href="{{ url_for('leave_requests.mahasiswa_index') }}">Batal</a>
+        <button class="button button--primary" type="submit" style="flex: 1;">Kirim Pengajuan</button>
+      </div>
+    </form>
+  </section>
+{% endblock %}

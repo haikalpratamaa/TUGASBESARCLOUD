@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% set page_title = "Profil Saya" %}
+
+{% block content %}
+  <section style="max-width: 640px;">
+    <div class="section-header section-header--compact">
+      <span class="section-header__label">Pengaturan Akun</span>
+      <h2>Profil Saya</h2>
+      <p>Kelola informasi pribadi dan foto profil Anda.</p>
+    </div>
+
+    <form class="form-panel" method="post" action="{{ url_for('profile.index') }}" enctype="multipart/form-data" data-loading>
+      
+      <div class="form-group" style="display: flex; align-items: center; gap: 20px; margin-bottom: 24px;">
+        <div class="profile-avatar-preview">
+          {% if current_user.profile_picture %}
+            <img src="{{ url_for('static', filename='uploads/profiles/' ~ current_user.profile_picture) }}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+          {% else %}
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--gray-100); display: grid; place-items: center; font-size: 24px; font-weight: 700; color: var(--text-tertiary); border: 1px solid var(--border);">
+              {{ current_user.name[:2].upper() }}
+            </div>
+          {% endif %}
+        </div>
+        <div>
+          <label for="profile_picture" class="button button--secondary" style="display: inline-block; cursor: pointer; margin-bottom: 4px;">Ubah Foto</label>
+          <input id="profile_picture" name="profile_picture" type="file" accept=".jpg, .jpeg, .png" style="display: none;" onchange="updatePreview(this)">
+          <p class="form-hint" style="margin: 0;">Maksimal 2MB. Format: JPG, PNG.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="text" value="{{ current_user.email }}" disabled style="background: var(--gray-50); color: var(--text-tertiary);">
+        <span class="form-hint">Email tidak dapat diubah karena terhubung dengan sistem kampus.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Nama Lengkap</label>
+        <input id="name" name="name" type="text" value="{{ current_user.name }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Nomor Telepon / WhatsApp</label>
+        <input id="phone" name="phone" type="tel" value="{{ current_user.phone or '' }}" placeholder="Contoh: 081234567890">
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 32px;">
+        <button class="button button--primary" type="submit" style="flex: 1;">Simpan Perubahan</button>
+      </div>
+    </form>
+  </section>
+
+  <script>
+    function updatePreview(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          const previewContainer = document.querySelector('.profile-avatar-preview');
+          previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">`;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+  </script>
+{% endblock %}
